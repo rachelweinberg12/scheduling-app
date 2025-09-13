@@ -24,7 +24,7 @@ export async function renderSessionForm(props: {
       getSessionsByEvent(eventName),
       getGuestsByEvent(eventName),
       getBookableLocations(),
-      getSessionProposalsByEvent(eventName),
+      CONSTS.PROPOSALS ? getSessionProposalsByEvent(eventName) : [],
     ]);
   days.forEach((day) => {
     const dayStartMillis = new Date(day.Start).getTime();
