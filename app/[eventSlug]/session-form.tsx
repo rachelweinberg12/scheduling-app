@@ -347,22 +347,24 @@ export function SessionForm(props: {
       </div>
 
       {/* Closed session checkbox */}
-      <div className="flex flex-col gap-2">
-        <label className="flex items-center gap-2 font-medium cursor-pointer">
-          <input
-            type="checkbox"
-            checked={closed}
-            onChange={(e) => setClosed(e.target.checked)}
-            className="h-4 w-4 text-rose-400 focus:ring-rose-400 border-gray-300 rounded"
-          />
-          Closed session
-        </label>
-        <p className="text-sm text-gray-500 ml-6">
-          Check this if participants can at most arrive 5 minutes late. If they
-          arrive later they may not join and should not knock or otherwise
-          disrupt the session.
-        </p>
-      </div>
+      {CONSTS.CLOSED_SESSIONS && (
+        <div className="flex flex-col gap-2">
+          <label className="flex items-center gap-2 font-medium cursor-pointer">
+            <input
+              type="checkbox"
+              checked={closed}
+              onChange={(e) => setClosed(e.target.checked)}
+              className="h-4 w-4 text-rose-400 focus:ring-rose-400 border-gray-300 rounded"
+            />
+            Closed session
+          </label>
+          <p className="text-sm text-gray-500 ml-6">
+            Check this if participants can at most arrive 5 minutes late. If
+            they arrive later they may not join and should not knock or
+            otherwise disrupt the session.
+          </p>
+        </div>
+      )}
 
       <div className="flex flex-col gap-1">
         <label className="font-medium">
