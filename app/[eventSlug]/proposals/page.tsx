@@ -7,6 +7,7 @@ import { eventSlugToName } from "@/utils/utils";
 import { ProposalActionBar } from "./proposal-action-bar";
 import { ProposalTable } from "./proposal-table";
 import { UserSelect } from "@/app/user-select";
+import { CONSTS } from "@/utils/constants";
 
 export const dynamic = "force-dynamic";
 
@@ -23,6 +24,21 @@ export default async function ProposalsPage({
 
   if (!event) {
     return <div>Event not found</div>;
+  }
+
+  // If proposals are disabled, redirect to main event page
+  if (!CONSTS.PROPOSALS) {
+    return (
+      <div>
+        <Link
+          className="bg-rose-400 text-white font-semibold py-2 px-4 rounded shadow hover:bg-rose-500 active:bg-rose-500 w-fit px-12"
+          href={`/${eventSlug}`}
+        >
+          Back to Event
+        </Link>
+        <div className="mt-6">Proposals are not enabled for this event.</div>
+      </div>
+    );
   }
 
   const [guests, proposals] = await Promise.all([

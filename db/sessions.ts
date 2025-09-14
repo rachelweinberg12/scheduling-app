@@ -99,8 +99,8 @@ async function getSessionsByFormula(filterFormula: string) {
           ID: record.id,
           "Attendee scheduled": !!record.fields["Attendee scheduled"],
           Blocker: !!record.fields["Blocker"],
-          Closed: !!record.fields["Closed"],
-          Event: record.fields.Event?.[0],
+          ...(CONSTS.CLOSED_SESSIONS && { Closed: !!record.fields["Closed"] }),
+          ...(CONSTS.MULTIPLE_EVENTS && { Event: record.fields.Event?.[0] }),
         });
       });
       fetchNextPage();

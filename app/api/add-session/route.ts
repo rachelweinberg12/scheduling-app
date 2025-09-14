@@ -10,7 +10,7 @@ export async function POST(req: Request) {
   const session = prepareToInsert(params);
   console.log(session);
   const existingSessions = (await getSessions()).filter(
-    (s) => !session.Event || session.Event[0] === s.Event
+    (s) => !session.Event || !s.Event || session.Event[0] === s.Event
   );
   const sessionValid = validateSession(session, existingSessions);
   if (sessionValid) {

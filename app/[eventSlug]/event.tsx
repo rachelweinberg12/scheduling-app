@@ -70,7 +70,7 @@ export function EventDisplay() {
         </a>
       </div>
       <p className="text-gray-900 mt-3 mb-5">{event.Description}</p>
-      {hasPhases(event) && (
+      {CONSTS.PROPOSALS && hasPhases(event) && (
         <div className="mb-5">
           <Link
             href={`/${eventNameToSlug(event.Name)}/proposals`}

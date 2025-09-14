@@ -29,6 +29,7 @@ import { ConfirmDeletionModal } from "../modals";
 import { UserContext } from "../context";
 import { sessionsOverlap, newEmptySession } from "../session_utils";
 import { parseSessionTime } from "../api/session-form-utils";
+import { CONSTS } from "@/utils/constants";
 
 interface ErrorResponse {
   message: string;
@@ -66,12 +67,14 @@ export function SessionForm(props: {
     : undefined;
 
   const [proposal, setProposal] = useState<SessionProposal | null>(
-    initialProposal
+    CONSTS.PROPOSALS ? initialProposal : null
   );
   const [error, setError] = useState<string | null>(null);
   const [title, setTitle] = useState(session.Title);
   const [description, setDescription] = useState(session.Description);
-  const [closed, setClosed] = useState(session.Closed || false);
+  const [closed, setClosed] = useState(
+    CONSTS.CLOSED_SESSIONS ? session.Closed || false : false
+  );
   const [day, setDay] = useState(initDay ?? days[0]);
   const [location, setLocation] = useState(
     locations.find((l) => l.Name === initLocation)?.Name ??
@@ -128,7 +131,7 @@ export function SessionForm(props: {
 
   const [usedProposal, setUsedProposal] = useState(false);
   useEffect(() => {
-    if (proposal) {
+    if (CONSTS.PROPOSALS && proposal) {
       setTitle(proposal.title);
       setDescription(proposal.description ?? "");
       setHosts(guests.filter((g) => proposal.hosts.includes(g.ID)));
@@ -136,7 +139,7 @@ export function SessionForm(props: {
         setDuration(proposal.durationMinutes);
       }
       setUsedProposal(true);
-    } else if (usedProposal) {
+    } else if (CONSTS.PROPOSALS && usedProposal) {
       // Triggered only when deselecting proposal
       setTitle("");
       setDescription("");
@@ -215,13 +218,13 @@ export function SessionForm(props: {
         id: sessionID,
         title,
         description,
-        closed,
+        ...(CONSTS.CLOSED_SESSIONS && { closed }),
         day: day,
         location: locations.find((loc) => loc.Name === location),
         startTimeString: startTime,
         duration,
         hosts: hosts,
-        proposal: proposal?.id ?? session.proposal?.[0],
+        ...(CONSTS.PROPOSALS && { proposal: proposal?.id ?? session.proposal?.[0] }),
       }),
     });
     if (res.ok) {
@@ -288,18 +291,20 @@ export function SessionForm(props: {
       available: true,
     },
   ];
-  const proposalSelectOpts = nullProposalOpts.concat(
-    proposals.map((pr) => ({
-      value: pr.id,
-      display: pr.title,
-      available: true,
-    }))
-  );
+  const proposalSelectOpts = CONSTS.PROPOSALS
+    ? nullProposalOpts.concat(
+        proposals.map((pr) => ({
+          value: pr.id,
+          display: pr.title,
+          available: true,
+        }))
+      )
+    : [];
 
   return (
     <div className="flex flex-col gap-4">
       <Link
-        className="bg-rose-400 text-white font-semibold py-2 px-4 rounded shadow hover:bg-rose-500 active:bg-rose-500 w-fit px-12"
+        className="bg-rose-400 text-white font-semibold py-2 px-12 rounded shadow hover:bg-rose-500 active:bg-rose-500 w-fit"
         href={`/${eventNameToSlug(eventName)}`}
       >
         Back to schedule
@@ -316,7 +321,7 @@ export function SessionForm(props: {
           reach out to you about rescheduling, relocating, or cancelling.
         </p>
       </div>
-      {proposals.length > 0 && !sessionID && (
+      {CONSTS.PROPOSALS && proposals.length > 0 && !sessionID && (
         <div className="flex flex-col gap-1 w-72">
           <label className="font-medium">Proposal</label>
           <MyListbox
@@ -434,7 +439,7 @@ export function SessionForm(props: {
           maxDuration={maxDuration}
         />
       </div>
-      {sessionID && session.proposal && (
+      {CONSTS.PROPOSALS && sessionID && session.proposal && (
         <p className="text-sm text-gray-600">
           This session was scheduled from a proposal. See it{" "}
           <a

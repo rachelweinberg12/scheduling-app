@@ -1,4 +1,5 @@
 import type { Session } from "@/db/sessions";
+import { CONSTS } from "@/utils/constants";
 
 export function newEmptySession(): Session {
   return {
@@ -14,7 +15,7 @@ export function newEmptySession(): Session {
     "Num RSVPs": 0,
     "Attendee scheduled": true,
     Blocker: false,
-    Closed: false,
+    ...(CONSTS.CLOSED_SESSIONS && { Closed: false }),
     proposal: [],
   };
 }

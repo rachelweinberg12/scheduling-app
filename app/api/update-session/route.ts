@@ -14,7 +14,7 @@ export async function POST(req: Request) {
   }
   const session = prepareToInsert(params);
   const allSessions = (await getSessions()).filter(
-    (s) => !session.Event || session.Event[0] === s.Event
+    (s) => !session.Event || !s.Event || session.Event[0] === s.Event
   );
   const prevSession = allSessions.find((ses) => ses.ID === params.id);
   if (prevSession === undefined) {

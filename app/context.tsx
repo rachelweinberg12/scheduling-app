@@ -14,6 +14,7 @@ import { Location } from "@/db/locations";
 import { Guest } from "@/db/guests";
 import { RSVP } from "@/db/rsvps";
 import { Vote, voteChoiceToEmoji } from "@/app/votes";
+import { CONSTS } from "@/utils/constants";
 
 export interface UserContextType {
   user: string | null;
@@ -265,7 +266,8 @@ export function VotesProvider({
 
   useEffect(() => {
     const fetchVotes = async () => {
-      if (!user) {
+      // If proposals are disabled, don't fetch votes
+      if (!CONSTS.PROPOSALS || !user) {
         setVotes([]);
         return;
       }

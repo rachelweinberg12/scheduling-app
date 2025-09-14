@@ -1,4 +1,5 @@
 import type { Event } from "@/db/events";
+import { CONSTS } from "@/utils/constants";
 
 /**
  * Represents the different phases an event can be in
@@ -29,6 +30,9 @@ function inDatePeriod(start: Date, end?: Date): boolean {
  * @returns true if the event is in the proposal phase
  */
 export function inProposalPhase(event: Event): boolean {
+  // If proposals are disabled, never be in proposal phase
+  if (!CONSTS.PROPOSALS) return false;
+
   const { proposalPhaseStart, proposalPhaseEnd } = event;
   return !!(
     proposalPhaseStart && inDatePeriod(proposalPhaseStart, proposalPhaseEnd)
@@ -41,6 +45,9 @@ export function inProposalPhase(event: Event): boolean {
  * @returns true if the event is in the voting phase
  */
 export function inVotingPhase(event: Event): boolean {
+  // If proposals are disabled, never be in voting phase
+  if (!CONSTS.PROPOSALS) return false;
+
   const { votingPhaseStart, votingPhaseEnd } = event;
   return !!(votingPhaseStart && inDatePeriod(votingPhaseStart, votingPhaseEnd));
 }
@@ -82,8 +89,13 @@ export function getCurrentPhase(event: Event): EventPhase {
  * @returns true if the event has at least one phase configured
  */
 export function hasPhases(event: Event): boolean {
-  const { proposalPhaseStart, votingPhaseStart, schedulingPhaseStart } = event;
+  // If proposals are disabled, only consider scheduling phases
+  if (!CONSTS.PROPOSALS) {
+    const { schedulingPhaseStart } = event;
+    return !!schedulingPhaseStart;
+  }
 
+  const { proposalPhaseStart, votingPhaseStart, schedulingPhaseStart } = event;
   return !!(proposalPhaseStart || votingPhaseStart || schedulingPhaseStart);
 }
 

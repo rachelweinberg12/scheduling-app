@@ -9,7 +9,7 @@ export type SessionParams = {
   id?: string;
   title: string;
   description: string;
-  closed: boolean;
+  closed?: boolean;
   hosts: Guest[];
   location: Location;
   day: Day;
@@ -26,8 +26,8 @@ export type SessionInsert = {
   Location: string[];
   Event?: string[];
   "Attendee scheduled": boolean;
-  Closed: boolean;
-  proposal: string[];
+  Closed?: boolean;
+  proposal?: string[];
 };
 export type SessionInterval = {
   start: string;
@@ -62,7 +62,6 @@ export function prepareToInsert(params: SessionParams): SessionInsert {
   const {
     title,
     description,
-    closed,
     hosts,
     location,
     day,
@@ -73,13 +72,14 @@ export function prepareToInsert(params: SessionParams): SessionInsert {
   const session: SessionInsert = {
     Title: title,
     Description: description,
-    Closed: closed,
+    ...(CONSTS.CLOSED_SESSIONS &&
+      params.closed !== undefined && { Closed: params.closed }),
     Hosts: hosts.map((host) => host.ID),
     Location: [location.ID],
     "Start time": start,
     "End time": end,
     "Attendee scheduled": true,
-    proposal: params.proposal ? [params.proposal] : [],
+    ...(CONSTS.PROPOSALS && { proposal: params.proposal ? [params.proposal] : [] }),
   };
   if (CONSTS.MULTIPLE_EVENTS && day["Event"]) {
     session.Event = [day["Event"][0]];

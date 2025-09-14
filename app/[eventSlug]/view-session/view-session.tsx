@@ -16,6 +16,7 @@ import { UserContext, EventContext } from "../../context";
 import { CurrentUserModal, ConfirmationModal } from "../../modals";
 import { sessionsOverlap } from "../../session_utils";
 import { LockIcon } from "../../lock-icon";
+import { CONSTS } from "@/utils/constants";
 import { LocationTag } from "../session-text";
 
 export function ViewSession(props: {
@@ -171,7 +172,7 @@ export function ViewSession(props: {
         sessionInfoDisplay={
           <div>
             <h1 className="text-lg font-bold leading-tight flex items-center gap-1">
-              {session.Closed && (
+              {CONSTS.CLOSED_SESSIONS && session.Closed && (
                 <LockIcon className="h-4 w-4 text-gray-600 flex-shrink-0" />
               )}
               {session.Title}
@@ -200,7 +201,7 @@ export function ViewSession(props: {
       />
       {showBackBtn && (
         <Link
-          className="bg-rose-400 text-white font-semibold py-2 px-4 rounded shadow hover:bg-rose-500 active:bg-rose-500 w-fit px-12 mt-4 mb-2 block"
+          className="bg-rose-400 text-white font-semibold py-2 px-12 rounded shadow hover:bg-rose-500 active:bg-rose-500 w-fit mt-4 mb-2 block"
           href={`/${eventSlug}`}
         >
           Back to {event.Name}
@@ -212,7 +213,7 @@ export function ViewSession(props: {
           className="text-xl font-semibold flex-1 flex items-center gap-2"
           id="title"
         >
-          {session.Closed && (
+          {CONSTS.CLOSED_SESSIONS && session.Closed && (
             <LockIcon className="h-5 w-5 text-gray-600 flex-shrink-0" />
           )}
           {session.Title}
@@ -237,7 +238,7 @@ export function ViewSession(props: {
         </div>
       </div>
       {/* Closed session information */}
-      {session.Closed && (
+      {CONSTS.CLOSED_SESSIONS && session.Closed && (
         <div className="mb-4 p-3 bg-yellow-50 border-l-4 border-yellow-400 text-sm text-yellow-800">
           <div className="flex items-center gap-2 font-medium mb-1">
             <LockIcon className="h-4 w-4" />

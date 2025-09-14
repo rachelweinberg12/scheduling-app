@@ -3,6 +3,7 @@ import { getEventByName } from "@/db/events";
 import { eventSlugToName } from "@/utils/utils";
 import EventPage from "./event-page";
 import { redirect } from "next/navigation";
+import { CONSTS } from "@/utils/constants";
 
 export default async function Page(props: { params: { eventSlug: string } }) {
   const { eventSlug } = props.params;
@@ -17,7 +18,10 @@ export default async function Page(props: { params: { eventSlug: string } }) {
 
   if (phase === EventPhase.SCHEDULING) {
     return <EventPage />;
-  } else if (phase === EventPhase.VOTING || phase === EventPhase.PROPOSAL) {
+  } else if (
+    CONSTS.PROPOSALS &&
+    (phase === EventPhase.VOTING || phase === EventPhase.PROPOSAL)
+  ) {
     redirect(`/${eventSlug}/proposals`);
   } else {
     return "Event unavailable: " + eventName;

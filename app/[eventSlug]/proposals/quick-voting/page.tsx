@@ -5,6 +5,7 @@ import { QuickVoting } from "./quick-voting";
 import { getSessionProposalsByEvent } from "@/db/sessionProposals";
 import { getGuests } from "@/db/guests";
 import { getVotesByUser } from "@/db/votes";
+import { CONSTS } from "@/utils/constants";
 
 export default async function ProposalQuickVoting(props: {
   params: { eventSlug: string };
@@ -12,6 +13,22 @@ export default async function ProposalQuickVoting(props: {
   const { eventSlug } = props.params;
   const eventName = eventSlug.replace(/-/g, " ");
   const currentUser = cookies().get("user")?.value;
+
+  // If proposals are disabled, redirect to main event page
+  if (!CONSTS.PROPOSALS) {
+    return (
+      <div>
+        <Link
+          className="bg-rose-400 text-white font-semibold py-2 px-4 rounded shadow hover:bg-rose-500 active:bg-rose-500 w-fit px-12"
+          href={`/${eventSlug}`}
+        >
+          Back to Event
+        </Link>
+        <div className="mt-6">Proposals are not enabled for this event.</div>
+      </div>
+    );
+  }
+
   if (!currentUser) {
     return (
       <div>
